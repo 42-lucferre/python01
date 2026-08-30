@@ -8,6 +8,8 @@ class Plant:
         self.set_height(height)
         self.set_age(age)
         self.growth_speed = growth_speed
+        print("Created: ", end="")
+        self.show()
 
     def set_name(self, name: str) -> None:
         self.name = name
@@ -19,30 +21,32 @@ class Plant:
         self.age_a = age
 
     def show(self) -> None:
-        print(f"{self.name}: {self.height}cm, {self.age_a} days old")
+        print(f"{self.name}: {self.height:.1f}cm, {self.age_a} days old")
 
     def age(self, days: int) -> None:
         self.age_a = self.age_a + days
 
     def grow(self, time: int) -> None:
         print("=== Garden Plant Growth ===")
-        print(f"{self.name}: {self.height:.1f}cm, {self.age_a} days old")
+        print(f"{self.name}: {self.height}cm, {self.age_a} days old")
         for i in range(time):
             self.age(1)
-            self.height = self.height + self.growth_speed
+            self.height = round(self.height + self.growth_speed, 2)
             print(f"=== Day {i + 1} ===")
-            print(f"{self.name}: {self.height:.1f}cm, {self.age_a} days old")
-        print(f"Growth this week: {self.growth_speed * time:.1f}cm")
+            print(f"{self.name}: {self.height}cm, {self.age_a} days old")
+        print(f"Growth this week: {round(self.growth_speed * time, 2)}cm")
 
 
 if __name__ == "__main__":
 
-    costela = Plant("Monstera deliciosa", 30, 123, 0.2)
+    print("=== Plant Factory Output ===")
+
+    monstera = Plant("Monstera deliciosa", 30, 123, 0.2)
 
     arecaceae = Plant("Arecacea", 500, 748, 1.5)
 
-    mulungu = Plant("Mulungu-do-litoral", 201, 1021, 0.9)
+    erythrina = Plant("Mulungu-do-litoral", 201, 1021, 0.9)
 
-    costela.grow(7)
-    # arecaceae.grow(7)
-    # mulungu.grow(7)
+    ipe = Plant("Handroanthus", 5, 1857, 1.3)
+
+    fly = Plant("Dionaea", 3, 666, 0.05)
