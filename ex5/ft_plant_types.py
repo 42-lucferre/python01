@@ -96,7 +96,7 @@ class Flower(Plant):
         return (self._color)
 
     def bloom(self) -> None:
-        print("[asking the flower to bloom]")
+        print(f"[asking the {self._name} to bloom]")
         self._bloom = 1
 
     def show(self) -> None:
@@ -108,6 +108,53 @@ class Flower(Plant):
             print(f" {self.get_name()} is blooming beautifully!")
 
 
+class Tree(Plant):
+
+    def __init__(self, name: str, height: float, age: int,
+                 growth_speed: float, trunk_diameter: float) -> None:
+        print("=== Tree")
+        self.set_trunk_diameter(trunk_diameter)
+        super().__init__(name, height, age, growth_speed)
+
+    def set_trunk_diameter(self, trunk_diameter: float) -> None:
+        self._trunk_diameter = trunk_diameter
+
+    def produce_shade(self) -> None:
+        print(f"[asking the {self._name} to produce shade]")
+        print(f"Tree {self._name} now produces a shade of {self._height:.1f}"
+              f"cm long and {self._trunk_diameter:.1f} wide.")
+
+    def show(self) -> None:
+        super().show()
+        print(f" Trunk diameter: {self._trunk_diameter:.1f}cm")
+
+
+class Vegetable(Plant):
+
+    def __init__(self, name: str, height: float, age: int,
+                 growth_speed: float, harvest_season: str,
+                 nutritional_value: int) -> None:
+        print("=== Vegetable")
+        self._harvest_season = harvest_season
+        self.set_nutritional_value(nutritional_value)
+        super().__init__(name, height, age, growth_speed)
+
+    def set_nutritional_value(self, nutritional_value: int) -> None:
+        self._nutritional_value = nutritional_value
+
+    def show(self) -> None:
+        super().show()
+        print(f" Harvest season: {self._harvest_season}")
+        print(f" Nutritional value: {self._nutritional_value}")
+
+    def grow(self, days: int) -> None:
+        print(f"[make {self._name} grow and age for {days} days]")
+        if self._height is not None:
+            self._height = self._height + (self._growth_speed * days)
+        self.age(days)
+        self._nutritional_value += days
+
+
 if __name__ == "__main__":
 
     print("=== Garden Plant Types ===")
@@ -116,7 +163,16 @@ if __name__ == "__main__":
     hibiscus.bloom()
     hibiscus.show()
 
-    # arecaceae = Plant("Arecacea", 500, 748, 1.5)
+    print("")
+
+    arecaceae = Tree("Arecacea", 500, 748, 1.5, 5)
+    arecaceae.produce_shade()
+
+    print("")
+
+    brassica = Vegetable("Brassica oleracea", 3, 45, 0.2, "winter", 0)
+    brassica.grow(20)
+    brassica.show()
 
     # erythrina = Plant("Mulungu-do-litoral", 201, 1021, 0.9)
 
