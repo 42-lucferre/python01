@@ -13,6 +13,7 @@ class Plant:
         self._age = None
         self.set_age(age)
         self._growth_speed = growth_speed
+        self._stats = self.Statistical(self)
         self.show()
 
     def set_name(self, name: str) -> None:
@@ -63,10 +64,12 @@ class Plant:
 
     def show(self) -> None:
         print(f"{self._name}: {self._height:.1f}cm, {self._age} days old")
+        self._stats.show_count()
 
     def age(self, days: int) -> None:
         if self._age is not None:
             self._age = self._age + days
+        self._stats.age_count()
 
     def grow(self, time: int) -> None:
         print("=== Garden Plant Growth ===")
@@ -78,6 +81,7 @@ class Plant:
             print(f"=== Day {i + 1} ===")
             print(f"{self._name}: {self._height:.1f}cm, {self._age} days old")
         print(f"Growth this week: {round(self._growth_speed * time, 2)}cm")
+        self._stats.grow_count()
 
     @staticmethod
     def check_age(age: int) -> None:
@@ -91,12 +95,32 @@ class Plant:
     def anonymous(cls) -> "Plant":
         return (cls("Unknown plant", 0, 0, 0))
 
+    class Statistical:
+
+        def __init__(self, plant_instance: "Plant") -> None:
+            self._plant_instance = plant_instance
+            self._grow_count = 0
+            self._age_count = 0
+            self._show_count = 0
+
+        def grow_count(self) -> None:
+            self._grow_count += 1
+
+        def age_count(self) -> None:
+            self._age_count += 1
+
+        def show_count(self) -> None:
+            self._show_count += 1
+
+        def display(self) -> None:
+            print(f"Stats: {self._grow_count} grow, "
+                  f"{self._age_count} age, {self._show_count} show")
+
 
 class Flower(Plant):
 
     def __init__(self, name: str, height: float, age: int,
                  growth_speed: float, color: str) -> None:
-        print("=== Flower")
         self.set_color(color)
         self._bloom = 0
         super().__init__(name, height, age, growth_speed)
@@ -108,7 +132,6 @@ class Flower(Plant):
         return (self._color)
 
     def bloom(self) -> None:
-        print(f"[asking the {self._name} to bloom]")
         self._bloom = 1
 
     def show(self) -> None:
@@ -118,6 +141,13 @@ class Flower(Plant):
             print(f" {self.get_name()} has not bloomed yet")
         else:
             print(f" {self.get_name()} is blooming beautifully!")
+
+    def grow(self, days: int) -> None:
+        print(f"[asking {self._name} to grow and bloom]")
+        self.bloom()
+        if self._height is not None:
+            self._height = self._height + (self._growth_speed * days)
+        self._stats.grow_count()
 
 
 class Tree(Plant):
@@ -167,6 +197,30 @@ class Vegetable(Plant):
         self._nutritional_value += days
 
 
+class Seed(Flower):
+
+    def __init__(self, name: str, height: float, age: int,
+                 growth_speed: float, color: str) -> None:
+        self._seeds = 0
+        super().__init__(name, height, age, growth_speed, color)
+
+    def show(self) -> None:
+        super().show()
+        if self._bloom == 1:
+            self._seeds = 42
+        print(f" Seeds: {self._seeds}")
+
+    def grow(self, days: int) -> None:
+        print(f"[make {self._name} grow, age and bloom]")
+        self.bloom()
+        if self._height is not None:
+            self._height = self._height + (self._growth_speed * days)
+        self.age(days)
+
+    def bloom(self) -> None:
+        self._bloom = 1
+
+
 if __name__ == "__main__":
 
     print("=== Garden statistics ===")
@@ -175,10 +229,12 @@ if __name__ == "__main__":
     Plant.check_age(400)
 
     print("")
-
+    print("=== Flower")
     hibiscus = Flower("Hibiscus striatus", 60, 333, 0.2, "pink")
-    hibiscus.bloom()
+    hibiscus._stats.display()
+    hibiscus.grow(1)
     hibiscus.show()
+    hibiscus._stats.display()
 
     print("")
 
@@ -186,10 +242,10 @@ if __name__ == "__main__":
     arecaceae.produce_shade()
 
     print("")
-
-    brassica = Vegetable("Brassica oleracea", 3, 45, 0.2, "winter", 0)
-    brassica.grow(20)
-    brassica.show()
+    print("=== Seeds")
+    handroanthus = Seed("Handroanthus heptaphyllus", 800, 1024, 2.1, "purple")
+    handroanthus.grow(20)
+    handroanthus.show()
 
     print("")
 
