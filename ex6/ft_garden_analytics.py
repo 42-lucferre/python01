@@ -113,6 +113,7 @@ class Plant:
             self._show_count += 1
 
         def display(self) -> None:
+            print(f"[statistics for {self._plant_instance._name}]")
             print(f"Stats: {self._grow_count} grow, "
                   f"{self._age_count} age, {self._show_count} show")
 
@@ -157,6 +158,7 @@ class Tree(Plant):
         print("=== Tree")
         self.set_trunk_diameter(trunk_diameter)
         super().__init__(name, height, age, growth_speed)
+        self._stats: Tree.Statistical
 
     def set_trunk_diameter(self, trunk_diameter: float) -> None:
         self._trunk_diameter = trunk_diameter
@@ -165,10 +167,24 @@ class Tree(Plant):
         print(f"[asking the {self._name} to produce shade]")
         print(f"Tree {self._name} now produces a shade of {self._height:.1f}"
               f"cm long and {self._trunk_diameter:.1f} wide.")
+        self._stats.shade_count()
 
     def show(self) -> None:
         super().show()
         print(f" Trunk diameter: {self._trunk_diameter:.1f}cm")
+
+    class Statistical(Plant.Statistical):
+
+        def __init__(self, plant_instance: Plant) -> None:
+            super().__init__(plant_instance)
+            self._shade = 0
+
+        def shade_count(self) -> None:
+            self._shade += 1
+
+        def display(self) -> None:
+            super().display()
+            print(f" {self._shade} shade")
 
 
 class Vegetable(Plant):
@@ -216,6 +232,7 @@ class Seed(Flower):
         if self._height is not None:
             self._height = self._height + (self._growth_speed * days)
         self.age(days)
+        self._stats.grow_count()
 
     def bloom(self) -> None:
         self._bloom = 1
@@ -229,6 +246,7 @@ if __name__ == "__main__":
     Plant.check_age(400)
 
     print("")
+
     print("=== Flower")
     hibiscus = Flower("Hibiscus striatus", 60, 333, 0.2, "pink")
     hibiscus._stats.display()
@@ -239,18 +257,23 @@ if __name__ == "__main__":
     print("")
 
     arecaceae = Tree("Arecacea", 500, 748, 1.5, 5)
+    arecaceae._stats.display()
     arecaceae.produce_shade()
+    arecaceae._stats.display()
 
     print("")
-    print("=== Seeds")
+
+    print("=== Seed")
     handroanthus = Seed("Handroanthus heptaphyllus", 800, 1024, 2.1, "purple")
     handroanthus.grow(20)
     handroanthus.show()
+    handroanthus._stats.display()
 
     print("")
 
     print("=== Anonymous")
     unk = Plant.anonymous()
+    unk._stats.display()
 
     # erythrina = Plant("Mulungu-do-litoral", 201, 1021, 0.9)
 
